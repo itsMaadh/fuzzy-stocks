@@ -19,11 +19,11 @@ for i in range(len(PE)):
 ROE = np.linspace(0, 30, 200)
 poor_ROE = np.zeros_like(ROE)
 ave_ROE = np.zeros_like(ROE)
-high_ROE = np.zeros_like(ROE)
+good_ROE = np.zeros_like(ROE)
 for i in range(len(ROE)):
     poor_ROE[i] = main.decreasing(ROE[i], 5, 7)
     ave_ROE[i] = main.trape(ROE[i], 5, 9, 9, 13)
-    high_ROE[i] = main.increasing(ROE[i], 10, 15)
+    good_ROE[i] = main.increasing(ROE[i], 10, 15)
 
 GPP = np.linspace(-1, 1, 100)
 Neg_GPP = np.zeros_like(GPP)
@@ -37,11 +37,11 @@ for i in range(len(GPP)):
 MAJEC = np.linspace(-3, 3, 200)
 Dec_MAJEC = np.zeros_like(MAJEC)
 Const_MAJEC = np.zeros_like(MAJEC)
-Inc_MAJEC = np.zeros_like(MAJEC)
+Grow_MAJEC = np.zeros_like(MAJEC)
 for i in range(len(MAJEC)):
     Dec_MAJEC[i] = main.decreasing(MAJEC[i], -1, 0)
     Const_MAJEC[i] = main.trape(MAJEC[i], -1, 0, 0, 1)
-    Inc_MAJEC[i] = main.increasing(MAJEC[i], 0, 1)
+    Grow_MAJEC[i] = main.increasing(MAJEC[i], 0, 1)
 
 SPM = np.linspace(-8, 8, 100)
 Red_SPM = np.zeros_like(SPM)
@@ -54,7 +54,7 @@ for i in range(len(SPM)):
 
 # Writing arbitrary 4 inputs for testing
 PE_input = 40
-ROE_input = 9
+ROE_input = 10
 GPP_input = 0
 MAJEC_input = 0
 
@@ -65,7 +65,7 @@ high_PE_input = main.increasing(PE_input, 20, 30)
 
 poor_ROE_input = main.decreasing(ROE_input, 5, 7)
 ave_ROE_input = main.trape(ROE_input, 5, 9, 9, 13)
-high_ROE_input = main.increasing(ROE_input, 10, 15)
+good_ROE_input = main.increasing(ROE_input, 10, 15)
 
 Neg_GPP_input = main.gauss1(GPP_input, -1, 0.25)
 Neu_GPP_input = main.gauss(GPP_input, 0, 0.16)
@@ -73,11 +73,11 @@ Pos_GPP_input = main.gauss2(GPP_input, 1, 0.25)
 
 Dec_MAJEC_input = main.decreasing(MAJEC_input, -1, 0)
 Const_MAJEC_input = main.trape(MAJEC_input, -1, 0, 0, 1)
-Inc_MAJEC_input = main.increasing(MAJEC_input, 0, 1)
+Grow_MAJEC_input = main.increasing(MAJEC_input, 0, 1)
 
 # Evaluate the rules
 # R1 : If low PE, and Good ROE, and Positive Public perception, and Growing GDP, then Share Price will increase
-R1 = np.fmin(np.min((low_PE_input, high_ROE_input, Pos_GPP_input, Inc_MAJEC_input)), Inc_SPM)
+R1 = np.fmin(np.min((low_PE_input, good_ROE_input, Pos_GPP_input, Grow_MAJEC_input)), Inc_SPM)
 
 # R2 : If low PE, and Average ROE, and Neutral Public perception, and Constant GDP, then Share Price will be
 # constant
@@ -88,7 +88,7 @@ R3 = np.fmin(np.min((low_PE_input, poor_ROE_input, Neg_GPP_input, Dec_MAJEC_inpu
 
 # R4 : If Medium PE, and Good ROE, and Positive Public perception, and Growing GDP, then Share Price will
 # increase
-R4 = np.fmin(np.min((med_PE_input, high_ROE_input, Pos_GPP_input, Inc_MAJEC_input)), Inc_SPM)
+R4 = np.fmin(np.min((med_PE_input, good_ROE_input, Pos_GPP_input, Grow_MAJEC_input)), Inc_SPM)
 
 # R5 : If Medium PE, and Average ROE, and Neutral Public perception, and Constant GDP, then Share Price will
 # be constant
@@ -99,7 +99,7 @@ R5 = np.fmin(np.min((med_PE_input, ave_ROE_input, Neu_GPP_input, Const_MAJEC_inp
 R6 = np.fmin(np.min((med_PE_input, poor_ROE_input, Neg_GPP_input, Dec_MAJEC_input)), Red_SPM)
 
 # R7 : If High PE, and Good ROE, and Positive Public perception, and Growing GDP, then Share Price will increase
-R7 = np.fmin(np.min((high_PE_input, high_ROE_input, Pos_GPP_input, Inc_MAJEC_input)), Inc_SPM)
+R7 = np.fmin(np.min((high_PE_input, good_ROE_input, Pos_GPP_input, Grow_MAJEC_input)), Inc_SPM)
 
 # R8 : If High PE, and Average ROE, and Neutral Public perception, and Constant GDP, then Share Price will
 # reduce
@@ -131,10 +131,10 @@ plt.legend()
 plt.subplot(2, 2, 2)
 plt.plot(ROE, poor_ROE, label="POOR_ROE")
 plt.plot(ROE, ave_ROE, label="AVERAGE_ROE")
-plt.plot(ROE, high_ROE, label="HIGH_ROE")
+plt.plot(ROE, good_ROE, label="GOOD_ROE")
 plt.scatter([ROE_input, ROE_input], [poor_ROE_input, poor_ROE_input])
 plt.scatter([ROE_input, ROE_input], [ave_ROE_input, ave_ROE_input])
-plt.scatter([ROE_input, ROE_input], [high_ROE_input, high_ROE_input])
+plt.scatter([ROE_input, ROE_input], [good_ROE_input, good_ROE_input])
 plt.legend()
 
 plt.subplot(2, 2, 3)
@@ -149,10 +149,10 @@ plt.legend()
 plt.subplot(2, 2, 4)
 plt.plot(MAJEC, Dec_MAJEC, label="DECREASING_GDP")
 plt.plot(MAJEC, Const_MAJEC, label="CONSTANT_GDP")
-plt.plot(MAJEC, Inc_MAJEC, label="INCREASING_GDP")
+plt.plot(MAJEC, Grow_MAJEC, label="GROWING_GDP")
 plt.scatter([MAJEC_input, MAJEC_input], [Dec_MAJEC_input, Dec_MAJEC_input])
 plt.scatter([MAJEC_input, MAJEC_input], [Const_MAJEC_input, Const_MAJEC_input])
-plt.scatter([MAJEC_input, MAJEC_input], [Inc_MAJEC_input, Inc_MAJEC_input])
+plt.scatter([MAJEC_input, MAJEC_input], [Grow_MAJEC_input, Grow_MAJEC_input])
 plt.legend()
 
 # Final share price visualization
